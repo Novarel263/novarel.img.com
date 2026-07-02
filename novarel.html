@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOVAREL — Kirim File Besar Secepat Cahaya</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800&family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#050B14;
+    --bg-1:#081120;
+    --panel:#0C1B2E;
+    --panel-2:#0B1A2B;
+    --card:#0E1F33;
+    --sky:#38BDF8;
+    --sky-2:#7DD3FC;
+    --sky-deep:#0EA5E9;
+    --sky-dim:#124E6B;
+    --line:rgba(125,211,252,0.18);
+    --line-soft:rgba(125,211,252,0.09);
+    --white:#EAF6FF;
+    --muted:#7C93AC;
+    --muted-2:#4E6580;
+    --danger:#FB7185;
+    --success:#34E5B0;
+    --radius:16px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;background:var(--bg);color:var(--white);
+    font-family:'Rajdhani',sans-serif;font-size:16px;line-height:1.55;font-weight:500;
+    -webkit-font-smoothing:antialiased;
+    background-image:
+      linear-gradient(rgba(125,211,252,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(125,211,252,0.05) 1px, transparent 1px);
+    background-size:44px 44px;
+    background-position:center top;
+    position:relative;
+  }
+  body::before{
+    content:"";position:fixed;top:-200px;left:50%;transform:translateX(-50%);
+    width:900px;height:600px;
+    background:radial-gradient(ellipse at center, rgba(56,189,248,0.16), transparent 70%);
+    pointer-events:none;z-index:0;
+  }
+  h1,h2,h3,.display{font-family:'Orbitron',sans-serif;color:#fff;margin:0;letter-spacing:0.01em;font-weight:700;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:inherit;text-decoration:none;}
+  button,input{font-family:inherit;}
+  button{cursor:pointer;}
+  :focus-visible{outline:2px solid var(--sky);outline-offset:2px;}
+  ::selection{background:var(--sky);color:#04141F;}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 24px;position:relative;z-index:1;}
+
+  /* NAV */
+  .nav{position:sticky;top:0;z-index:80;background:rgba(5,11,20,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line-soft);}
+  .nav-inner{max-width:1140px;margin:0 auto;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px;}
+  .logo{display:flex;align-items:center;gap:11px;}
+  .logo-mark{
+    width:36px;height:36px;border-radius:9px;
+    background:linear-gradient(135deg, var(--sky) 0%, var(--sky-deep) 100%);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Orbitron',sans-serif;font-weight:800;font-size:16px;color:#04141F;
+    box-shadow:0 0 18px rgba(56,189,248,0.55);
+  }
+  .logo-text{display:flex;flex-direction:column;line-height:1.1;}
+  .logo-name{font-family:'Orbitron',sans-serif;font-weight:700;font-size:17px;letter-spacing:0.04em;color:#fff;}
+  .logo-domain{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--sky-2);letter-spacing:0.02em;}
+  .nav-links{display:flex;gap:30px;font-size:15px;font-weight:600;color:var(--muted);}
+  .nav-links a:hover{color:var(--sky-2);}
+  .nav-actions{display:flex;align-items:center;gap:12px;}
+  .btn{border:none;border-radius:10px;padding:11px 20px;font-size:14.5px;font-weight:700;
+    transition:transform .15s ease, box-shadow .2s ease, opacity .15s ease;font-family:'Rajdhani',sans-serif;letter-spacing:0.02em;}
+  .btn:active{transform:scale(0.97);}
+  .btn-sky{background:linear-gradient(135deg, var(--sky) 0%, var(--sky-deep) 100%);color:#04141F;box-shadow:0 0 20px rgba(56,189,248,0.35);}
+  .btn-sky:hover{box-shadow:0 0 28px rgba(56,189,248,0.55);}
+  .btn-ghost{background:transparent;border:1px solid var(--line);color:var(--white);}
+  .btn-ghost:hover{border-color:var(--sky);color:var(--sky-2);}
+  .btn-block{width:100%;}
+  @media(max-width:860px){.nav-links{display:none;}}
+
+  /* HERO */
+  .hero{padding:64px 0 30px;text-align:center;}
+  .eyebrow-badge{
+    display:inline-flex;align-items:center;gap:8px;background:var(--panel-2);border:1px solid var(--line);
+    padding:7px 15px;border-radius:999px;font-size:12.5px;color:var(--sky-2);font-weight:600;letter-spacing:0.03em;margin-bottom:22px;
+  }
+  .pulse-dot{width:7px;height:7px;border-radius:50%;background:var(--success);box-shadow:0 0 8px var(--success);animation:blip 1.8s infinite;}
+  @keyframes blip{0%,100%{opacity:1;}50%{opacity:0.35;}}
+  .hero h1{font-size:44px;line-height:1.14;max-width:760px;margin:0 auto;}
+  .hero h1 span{color:var(--sky);text-shadow:0 0 24px rgba(56,189,248,0.5);}
+  .hero p.lead{font-size:17px;color:var(--muted);max-width:520px;margin:20px auto 0;font-weight:500;}
+  @media(max-width:700px){.hero h1{font-size:32px;}}
+
+  /* TRANSFER APP */
+  .app-shell{max-width:640px;margin:44px auto 0;}
+  .app-card{
+    background:var(--panel-2);border:1px solid var(--line);border-radius:20px;
+    padding:6px;box-shadow:0 0 0 1px rgba(56,189,248,0.06), 0 30px 80px -30px rgba(0,0,0,0.7);
+    position:relative;overflow:hidden;
+  }
+  .app-card::before{
+    content:"";position:absolute;top:0;left:-40%;width:40%;height:2px;
+    background:linear-gradient(90deg, transparent, var(--sky), transparent);
+    animation:scan 3.2s linear infinite;opacity:0.8;
+  }
+  @keyframes scan{0%{left:-40%;}100%{left:100%;}}
+  .app-inner{background:var(--bg-1);border-radius:16px;padding:26px;}
+
+  .tab-toggle{display:flex;background:var(--panel-2);border:1px solid var(--line);border-radius:11px;padding:4px;margin-bottom:20px;}
+  .tab-btn{flex:1;background:none;border:none;padding:10px;border-radius:8px;font-size:14px;font-weight:700;color:var(--muted);}
+  .tab-btn.active{background:var(--sky-dim);color:var(--sky-2);}
+
+  .dropzone{
+    border:1.5px dashed var(--line);border-radius:14px;padding:38px 20px;text-align:center;
+    background:radial-gradient(ellipse at center, rgba(56,189,248,0.05), transparent 70%);
+    transition:border-color .2s ease, background .2s ease;cursor:pointer;
+  }
+  .dropzone.drag{border-color:var(--sky);background:rgba(56,189,248,0.08);}
+  .dz-icon{width:52px;height:52px;border-radius:50%;background:var(--sky-dim);
+    display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 14px;
+    box-shadow:0 0 22px rgba(56,189,248,0.3);}
+  .dz-title{font-family:'Orbitron',sans-serif;font-weight:700;font-size:14px;color:#fff;margin-bottom:6px;}
+  .dz-sub{font-size:13.5px;color:var(--muted);}
+  .dz-sub b{color:var(--sky-2);}
+  #fileInput{display:none;}
+
+  .file-list{margin-top:16px;display:flex;flex-direction:column;gap:8px;}
+  .file-row{
+    display:flex;align-items:center;gap:10px;background:var(--panel-2);border:1px solid var(--line-soft);
+    border-radius:10px;padding:10px 12px;
+  }
+  .file-ic{width:30px;height:30px;border-radius:7px;background:var(--sky-dim);color:var(--sky-2);
+    display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+  .file-meta{flex:1;min-width:0;}
+  .file-name{font-size:13.5px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .file-size{font-size:11.5px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+  .file-remove{background:none;border:none;color:var(--muted);font-size:14px;padding:4px 8px;}
+  .file-remove:hover{color:var(--danger);}
+
+  .usage-bar{margin-top:14px;}
+  .usage-track{height:6px;background:var(--panel-2);border-radius:999px;overflow:hidden;}
+  .usage-fill{height:100%;background:linear-gradient(90deg, var(--sky), var(--sky-2));border-radius:999px;transition:width .3s ease;}
+  .usage-fill.over{background:linear-gradient(90deg, var(--danger), #F97316);}
+  .usage-label{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-top:6px;font-family:'JetBrains Mono',monospace;}
+
+  .form-area{margin-top:18px;display:none;}
+  .form-area.show{display:block;}
+  .field{margin-bottom:12px;}
+  .field label{font-size:12.5px;color:var(--muted);display:block;margin-bottom:6px;font-weight:600;letter-spacing:0.02em;}
+  .field input, .field textarea{
+    width:100%;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;
+    padding:11px 13px;color:#fff;font-size:14px;font-family:'Rajdhani',sans-serif;font-weight:500;
+  }
+  .field input::placeholder, .field textarea::placeholder{color:var(--muted-2);}
+  .field textarea{resize:vertical;min-height:60px;}
+  .link-note{font-size:12.5px;color:var(--muted);background:var(--panel-2);border:1px solid var(--line-soft);border-radius:10px;padding:11px 13px;margin-top:2px;}
+  .link-note b{color:var(--sky-2);}
+
+  .send-btn-row{margin-top:18px;}
+  .err-msg{color:var(--danger);font-size:12.5px;margin-top:8px;display:none;text-align:center;}
+
+  /* PROGRESS STATE */
+  .progress-state{display:none;text-align:center;padding:20px 4px;}
+  .progress-state.show{display:block;}
+  .progress-ring-wrap{position:relative;width:120px;height:120px;margin:0 auto 20px;}
+  .progress-ring-wrap svg{transform:rotate(-90deg);}
+  .progress-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-family:'Orbitron',sans-serif;font-weight:700;font-size:20px;color:var(--sky-2);}
+  .progress-title{font-family:'Orbitron',sans-serif;font-weight:700;font-size:14px;color:#fff;margin-bottom:6px;}
+  .progress-sub{font-size:13px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+
+  /* SUCCESS STATE */
+  .success-state{display:none;text-align:center;padding:6px 2px 4px;}
+  .success-state.show{display:block;}
+  .success-icon{width:56px;height:56px;border-radius:50%;background:rgba(52,229,176,0.12);border:1px solid rgba(52,229,176,0.4);
+    display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--success);margin:0 auto 14px;}
+  .success-title{font-family:'Orbitron',sans-serif;font-weight:700;font-size:16px;color:#fff;margin-bottom:6px;}
+  .success-sub{font-size:13.5px;color:var(--muted);margin-bottom:20px;}
+  .link-capsule{
+    display:flex;align-items:center;gap:8px;background:var(--panel-2);border:1px solid var(--line);
+    border-radius:12px;padding:12px 14px;margin-bottom:14px;
+  }
+  .link-capsule .u{flex:1;min-width:0;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--sky-2);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;}
+  .link-capsule button{background:var(--sky-dim);border:none;color:var(--sky-2);border-radius:8px;padding:8px 12px;font-size:12px;font-weight:700;flex-shrink:0;}
+  .link-capsule button:hover{background:var(--sky-deep);color:#04141F;}
+  .qr-box{width:104px;height:104px;margin:0 auto 16px;border-radius:10px;overflow:hidden;border:1px solid var(--line);}
+  .success-meta{display:flex;justify-content:center;gap:22px;margin-bottom:20px;flex-wrap:wrap;}
+  .success-meta div{font-size:11.5px;color:var(--muted);text-align:center;}
+  .success-meta div b{display:block;font-family:'JetBrains Mono',monospace;color:#fff;font-size:14px;margin-top:2px;}
+
+  /* FEATURES */
+  .section{padding:70px 0;position:relative;}
+  .section-head{text-align:center;max-width:560px;margin:0 auto 40px;}
+  .section-eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--sky-2);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:10px;}
+  .section h2{font-size:28px;}
+  .section p.sub{color:var(--muted);margin-top:10px;font-size:15px;}
+  .feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+  .feat-card{background:var(--panel-2);border:1px solid var(--line-soft);border-radius:14px;padding:22px 18px;transition:border-color .2s ease;}
+  .feat-card:hover{border-color:var(--line);}
+  .feat-icon{width:42px;height:42px;border-radius:10px;background:var(--sky-dim);color:var(--sky-2);
+    display:flex;align-items:center;justify-content:center;font-size:19px;margin-bottom:14px;}
+  .feat-card h3{font-size:15px;font-family:'Rajdhani',sans-serif;font-weight:700;color:#fff;margin-bottom:6px;}
+  .feat-card p{font-size:13px;color:var(--muted);margin:0;line-height:1.6;}
+  @media(max-width:900px){.feat-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:520px){.feat-grid{grid-template-columns:1fr;}}
+
+  /* PRICING */
+  .price-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:720px;margin:0 auto;}
+  .price-card{background:var(--panel-2);border:1px solid var(--line-soft);border-radius:16px;padding:28px;}
+  .price-card.pro{border:1px solid var(--sky);box-shadow:0 0 30px rgba(56,189,248,0.15);position:relative;}
+  .price-badge{position:absolute;top:-11px;left:24px;background:var(--sky);color:#04141F;font-size:11px;font-weight:700;
+    padding:4px 12px;border-radius:999px;font-family:'JetBrains Mono',monospace;}
+  .price-name{font-family:'Orbitron',sans-serif;font-size:14px;color:var(--sky-2);letter-spacing:0.06em;margin-bottom:10px;}
+  .price-amt{font-family:'Orbitron',sans-serif;font-size:32px;color:#fff;margin-bottom:4px;}
+  .price-amt span{font-size:14px;color:var(--muted);font-family:'Rajdhani',sans-serif;font-weight:600;}
+  .price-desc{font-size:13px;color:var(--muted);margin-bottom:20px;}
+  .price-list{list-style:none;padding:0;margin:0 0 24px;display:flex;flex-direction:column;gap:10px;}
+  .price-list li{font-size:13.5px;color:var(--white);display:flex;gap:8px;align-items:flex-start;}
+  .price-list li::before{content:"✓";color:var(--success);font-weight:700;}
+  @media(max-width:640px){.price-grid{grid-template-columns:1fr;}}
+
+  footer{border-top:1px solid var(--line-soft);padding:44px 0 30px;}
+  .foot-grid{display:flex;justify-content:space-between;flex-wrap:wrap;gap:30px;}
+  .foot-cols{display:flex;gap:56px;flex-wrap:wrap;}
+  .foot-col h4{font-size:11.5px;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:12px;font-weight:700;}
+  .foot-col a{display:block;font-size:13.5px;color:var(--white);margin-bottom:9px;}
+  .foot-col a:hover{color:var(--sky-2);}
+  .copyright{margin-top:32px;font-size:12px;color:var(--muted);border-top:1px solid var(--line-soft);padding-top:18px;
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+  .copyright .dom{font-family:'JetBrains Mono',monospace;color:var(--sky-2);}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="logo">
+      <div class="logo-mark">N</div>
+      <div class="logo-text">
+        <span class="logo-name">NOVAREL</span>
+        <span class="logo-domain">img.novarel.com</span>
+      </div>
+    </div>
+    <div class="nav-links">
+      <a href="#kirim">Kirim File</a>
+      <a href="#fitur">Fitur</a>
+      <a href="#harga">Harga</a>
+      <a href="#tentang">Tentang</a>
+    </div>
+    <div class="nav-actions">
+      <button class="btn btn-ghost">Masuk</button>
+      <button class="btn btn-sky">Daftar Gratis</button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="kirim">
+  <div class="wrap">
+    <div class="eyebrow-badge"><span class="pulse-dot"></span>Server transfer aktif · latensi rendah</div>
+    <h1>Kirim file besar,<br><span>secepat cahaya.</span></h1>
+    <p class="lead">Unggah, bagikan, selesai. Tanpa kompresi, tanpa akun wajib, terenkripsi ujung ke ujung lewat jaringan img.novarel.com.</p>
+
+    <div class="app-shell">
+      <div class="app-card">
+        <div class="app-inner">
+
+          <div class="tab-toggle" id="tabToggle">
+            <button class="tab-btn active" data-mode="email">Kirim via Email</button>
+            <button class="tab-btn" data-mode="link">Dapatkan Link</button>
+          </div>
+
+          <div id="formState">
+            <div class="dropzone" id="dropzone">
+              <div class="dz-icon">⇪</div>
+              <div class="dz-title">Tarik & lepas file di sini</div>
+              <div class="dz-sub">atau <b>klik untuk memilih file</b> dari perangkatmu</div>
+              <input type="file" id="fileInput" multiple>
+            </div>
+
+            <div class="file-list" id="fileList"></div>
+
+            <div class="usage-bar" id="usageBar" style="display:none;">
+              <div class="usage-track"><div class="usage-fill" id="usageFill" style="width:0%;"></div></div>
+              <div class="usage-label"><span id="usageText">0 MB terpakai</span><span>Batas gratis 2 GB</span></div>
+            </div>
+
+            <div class="form-area" id="emailFields">
+              <div class="field"><label>Email penerima</label><input type="text" id="toEmail" placeholder="teman@email.com, satu@email.com"></div>
+              <div class="field"><label>Email kamu</label><input type="text" id="fromEmail" placeholder="nama@email.com"></div>
+              <div class="field"><label>Pesan (opsional)</label><textarea id="msgField" placeholder="Tulis pesan singkat untuk penerima"></textarea></div>
+            </div>
+
+            <div class="form-area" id="linkFields">
+              <div class="link-note">Link unduhan dibuat otomatis di domain <b>img.novarel.com</b> dan berlaku selama 7 hari, siap dibagikan ke mana saja.</div>
+            </div>
+
+            <div class="send-btn-row">
+              <button class="btn btn-sky btn-block" id="sendBtn">Kirim Sekarang</button>
+              <div class="err-msg" id="errMsg"></div>
+            </div>
+          </div>
+
+          <div class="progress-state" id="progressState">
+            <div class="progress-ring-wrap">
+              <svg width="120" height="120" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="52" fill="none" stroke="#0E1F33" stroke-width="8"/>
+                <circle id="progCircle" cx="60" cy="60" r="52" fill="none" stroke="#38BDF8" stroke-width="8"
+                  stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7"/>
+              </svg>
+              <div class="progress-pct" id="progPct">0%</div>
+            </div>
+            <div class="progress-title">Mengunggah file…</div>
+            <div class="progress-sub" id="progSub">menyiapkan koneksi aman</div>
+          </div>
+
+          <div class="success-state" id="successState">
+            <div class="success-icon">✓</div>
+            <div class="success-title">Transfer berhasil dibuat</div>
+            <div class="success-sub" id="successSub">File siap diunduh oleh penerima</div>
+            <div class="qr-box" id="qrBox"></div>
+            <div class="link-capsule">
+              <span class="u" id="genLink">https://img.novarel.com/xxxxxxxx</span>
+              <button id="copyBtn">Salin</button>
+            </div>
+            <div class="success-meta">
+              <div>Ukuran<b id="metaSize">0 MB</b></div>
+              <div>Kedaluwarsa<b>7 hari</b></div>
+              <div>Enkripsi<b>AES-256</b></div>
+            </div>
+            <button class="btn btn-ghost btn-block" id="resetBtn">Buat Transfer Baru</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="section" id="fitur">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-eyebrow">Kenapa NOVAREL</div>
+      <h2>Dibangun untuk file besar dan tim yang bergerak cepat</h2>
+      <p class="sub">Semua yang dibutuhkan untuk memindahkan file berat tanpa hambatan.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <div class="feat-icon">⚡</div>
+        <h3>Transfer super cepat</h3>
+        <p>Jaringan edge img.novarel.com memangkas waktu unggah untuk file berukuran gigabyte.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🔒</div>
+        <h3>Terenkripsi ujung ke ujung</h3>
+        <p>Setiap file dienkripsi AES-256 sejak diunggah hingga diunduh penerima.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🔗</div>
+        <h3>Link tanpa ribet</h3>
+        <p>Bagikan lewat email langsung atau salin satu link pendek ke mana saja.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">⏱</div>
+        <h3>Kontrol masa berlaku</h3>
+        <p>Setiap transfer otomatis kedaluwarsa setelah 7 hari demi keamanan data.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="harga">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-eyebrow">Harga</div>
+      <h2>Mulai gratis, upgrade saat butuh lebih</h2>
+      <p class="sub">Tanpa kontrak, batalkan kapan saja.</p>
+    </div>
+    <div class="price-grid">
+      <div class="price-card">
+        <div class="price-name">FREE</div>
+        <div class="price-amt">Rp0<span> /bulan</span></div>
+        <div class="price-desc">Untuk kirim file sesekali.</div>
+        <ul class="price-list">
+          <li>Transfer hingga 2 GB per kiriman</li>
+          <li>Link berlaku 7 hari</li>
+          <li>Enkripsi standar</li>
+        </ul>
+        <button class="btn btn-ghost btn-block">Mulai Gratis</button>
+      </div>
+      <div class="price-card pro">
+        <div class="price-badge">Populer</div>
+        <div class="price-name">PRO</div>
+        <div class="price-amt">Rp49rb<span> /bulan</span></div>
+        <div class="price-desc">Untuk kebutuhan kerja rutin.</div>
+        <ul class="price-list">
+          <li>Transfer hingga 200 GB per kiriman</li>
+          <li>Link berlaku hingga 90 hari</li>
+          <li>Proteksi kata sandi & branding kustom</li>
+          <li>Statistik unduhan penerima</li>
+        </ul>
+        <button class="btn btn-sky btn-block">Upgrade ke Pro</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="tentang">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div style="max-width:260px;">
+        <div class="logo" style="margin-bottom:12px;">
+          <div class="logo-mark">N</div>
+          <div class="logo-text"><span class="logo-name">NOVAREL</span><span class="logo-domain">img.novarel.com</span></div>
+        </div>
+        <p style="font-size:13px;color:var(--muted);">Layanan transfer file cepat dan aman untuk siapa saja.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h4>Produk</h4>
+          <a href="#kirim">Kirim File</a>
+          <a href="#harga">Harga</a>
+          <a href="#fitur">Fitur</a>
+        </div>
+        <div class="foot-col">
+          <h4>Perusahaan</h4>
+          <a href="#tentang">Tentang Kami</a>
+          <a href="#">Karier</a>
+          <a href="#">Kontak</a>
+        </div>
+        <div class="foot-col">
+          <h4>Legal</h4>
+          <a href="#">Privasi</a>
+          <a href="#">Ketentuan Layanan</a>
+        </div>
+      </div>
+    </div>
+    <div class="copyright">
+      <span>© 2026 NOVAREL. Semua hak dilindungi.</span>
+      <span class="dom">img.novarel.com</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const FREE_LIMIT = 2 * 1024 * 1024 * 1024;
+let files = [];
+let mode = 'email';
+
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('fileInput');
+const fileList = document.getElementById('fileList');
+const usageBar = document.getElementById('usageBar');
+const usageFill = document.getElementById('usageFill');
+const usageText = document.getElementById('usageText');
+const emailFields = document.getElementById('emailFields');
+const linkFields = document.getElementById('linkFields');
+const errMsg = document.getElementById('errMsg');
+
+function fmtSize(bytes){
+  if(bytes < 1024) return bytes + ' B';
+  if(bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB';
+  if(bytes < 1024*1024*1024) return (bytes/(1024*1024)).toFixed(1) + ' MB';
+  return (bytes/(1024*1024*1024)).toFixed(2) + ' GB';
+}
+
+dropzone.addEventListener('click', () => fileInput.click());
+dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('drag'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag'));
+dropzone.addEventListener('drop', e => {
+  e.preventDefault(); dropzone.classList.remove('drag');
+  addFiles(e.dataTransfer.files);
+});
+fileInput.addEventListener('change', () => { addFiles(fileInput.files); fileInput.value = ''; });
+
+function addFiles(fileListObj){
+  Array.from(fileListObj).forEach(f => files.push(f));
+  renderFiles();
+}
+
+function removeFile(idx){
+  files.splice(idx,1);
+  renderFiles();
+}
+
+function renderFiles(){
+  if(files.length === 0){
+    fileList.innerHTML = '';
+    usageBar.style.display = 'none';
+    emailFields.classList.remove('show');
+    linkFields.classList.remove('show');
+    return;
+  }
+  fileList.innerHTML = files.map((f,i) => `
+    <div class="file-row">
+      <div class="file-ic">▤</div>
+      <div class="file-meta">
+        <div class="file-name">${f.name}</div>
+        <div class="file-size">${fmtSize(f.size)}</div>
+      </div>
+      <button class="file-remove" onclick="removeFile(${i})">✕</button>
+    </div>
+  `).join('');
+
+  const total = files.reduce((s,f) => s + f.size, 0);
+  const pct = Math.min(100, (total / FREE_LIMIT) * 100);
+  usageBar.style.display = 'block';
+  usageFill.style.width = pct.toFixed(1) + '%';
+  usageFill.classList.toggle('over', total > FREE_LIMIT);
+  usageText.textContent = fmtSize(total) + ' terpakai';
+
+  if(mode === 'email') emailFields.classList.add('show'); else emailFields.classList.remove('show');
+  if(mode === 'link') linkFields.classList.add('show'); else linkFields.classList.remove('show');
+}
+
+document.getElementById('tabToggle').addEventListener('click', e => {
+  const b = e.target.closest('.tab-btn'); if(!b) return;
+  document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active'));
+  b.classList.add('active');
+  mode = b.dataset.mode;
+  renderFiles();
+});
+
+document.getElementById('sendBtn').addEventListener('click', () => {
+  errMsg.style.display = 'none';
+  if(files.length === 0){
+    errMsg.textContent = 'Pilih minimal satu file untuk dikirim.';
+    errMsg.style.display = 'block';
+    return;
+  }
+  const total = files.reduce((s,f) => s + f.size, 0);
+  if(total > FREE_LIMIT){
+    errMsg.textContent = 'Ukuran melebihi batas gratis 2 GB. Upgrade ke Pro untuk mengirim lebih banyak.';
+    errMsg.style.display = 'block';
+    return;
+  }
+  if(mode === 'email'){
+    const to = document.getElementById('toEmail').value.trim();
+    if(!to){
+      errMsg.textContent = 'Isi email penerima terlebih dahulu.';
+      errMsg.style.display = 'block';
+      return;
+    }
+  }
+  startTransfer(total);
+});
+
+function startTransfer(totalBytes){
+  document.getElementById('formState').style.display = 'none';
+  document.getElementById('progressState').classList.add('show');
+  const circle = document.getElementById('progCircle');
+  const pctLabel = document.getElementById('progPct');
+  const subLabel = document.getElementById('progSub');
+  const circumference = 326.7;
+  const subs = ['menyiapkan koneksi aman', 'mengunggah data', 'memverifikasi checksum', 'menyelesaikan transfer'];
+  let pct = 0;
+  const timer = setInterval(() => {
+    pct += Math.random() * 14 + 6;
+    if(pct >= 100){
+      pct = 100;
+      clearInterval(timer);
+      setTimeout(() => finishTransfer(totalBytes), 350);
+    }
+    circle.style.strokeDashoffset = circumference - (circumference * pct / 100);
+    pctLabel.textContent = Math.round(pct) + '%';
+    subLabel.textContent = subs[Math.min(subs.length-1, Math.floor(pct/26))];
+  }, 260);
+}
+
+function finishTransfer(totalBytes){
+  document.getElementById('progressState').classList.remove('show');
+  document.getElementById('successState').classList.add('show');
+  const code = Math.random().toString(36).slice(2,10);
+  const link = 'https://img.novarel.com/' + code;
+  document.getElementById('genLink').textContent = link;
+  document.getElementById('metaSize').textContent = fmtSize(totalBytes);
+  document.getElementById('successSub').textContent = mode === 'email'
+    ? 'Notifikasi telah dikirim ke penerima lewat email'
+    : 'Link siap disalin dan dibagikan ke mana saja';
+  renderQr(code);
+}
+
+function renderQr(seedStr){
+  let seed = 0;
+  for(let i=0;i<seedStr.length;i++) seed += seedStr.charCodeAt(i) * (i+1);
+  const size = 9;
+  let cells = '';
+  for(let r=0;r<size;r++){
+    for(let c=0;c<size;c++){
+      seed = (seed * 9301 + 49297) % 233280;
+      const on = (seed / 233280) > 0.5;
+      cells += `<div style="background:${on ? '#38BDF8' : '#0B1622'};"></div>`;
+    }
+  }
+  document.getElementById('qrBox').innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(${size},1fr);width:100%;height:100%;">${cells}</div>
+  `;
+}
+
+document.getElementById('copyBtn').addEventListener('click', () => {
+  const text = document.getElementById('genLink').textContent;
+  const btn = document.getElementById('copyBtn');
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Tersalin';
+    setTimeout(() => btn.textContent = 'Salin', 1600);
+  }).catch(() => {
+    btn.textContent = 'Gagal';
+    setTimeout(() => btn.textContent = 'Salin', 1600);
+  });
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  files = [];
+  document.getElementById('toEmail').value = '';
+  document.getElementById('fromEmail').value = '';
+  document.getElementById('msgField').value = '';
+  document.getElementById('successState').classList.remove('show');
+  document.getElementById('formState').style.display = 'block';
+  document.getElementById('progCircle').style.strokeDashoffset = '326.7';
+  renderFiles();
+});
+</script>
+
+</body>
+</html>
